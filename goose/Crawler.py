@@ -69,9 +69,6 @@ class Crawler(object):
         article.doc = doc
         article.rawDoc = deepcopy(doc)
         article.title = extractor.getTitle(article)
-        # TODO
-        # article.publishDate = config.publishDateExtractor.extract(doc)
-        # article.additionalData = config.getAdditionalDataExtractor.extract(doc)
         article.metaLang = extractor.getMetaLang(article)
         article.metaFavicon = extractor.getMetaFavicon(article)
         article.metaDescription = extractor.getMetaDescription(article)

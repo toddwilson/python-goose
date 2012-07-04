@@ -44,36 +44,3 @@ class Configuration(object):
         #                         " AppleWebKit/534.52.7 (KHTML, like Gecko) "\
         #                         "Version/5.1.2 Safari/534.52.7"
         self.browserUserAgent = 'Goose/1.0'
-
-        # TODO
-        self.publishDateExtractor = None
-
-        # TODO
-        self.additionalDataExtractor = None
-
-
-    def getPublishDateExtractor(self):
-        return self.publishDateExtractor
-
-    def setPublishDateExtractor(self, extractor):
-        """\
-        Pass in to extract article publish dates.
-        @param extractor a concrete instance of PublishDateExtractor
-        """
-        if not extractor:
-            raise ValueError("extractor must not be null!")
-        self.publishDateExtractor = extractor
-
-    def getAdditionalDataExtractor(self):
-        return self.additionalDataExtractor
-
-    def setAdditionalDataExtractor(self, extractor):
-        """\
-        Pass in to extract any additional data not defined within
-        @param extractor a concrete instance of AdditionalDataExtractor
-        """
-        if not extractor:
-            raise ValueError("extractor must not be null!")
-        self.additionalDataExtractor = extractor
-
-
