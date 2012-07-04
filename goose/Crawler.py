@@ -85,9 +85,6 @@ class Crawler(object):
         # big stuff
         article.topNode = extractor.calculateBestNodeBasedOnClustering(article)
         if article.topNode is not None:
-            # TODO
-            # movies and images
-            # article.movies = extractor.extractVideos(article.topNode)
             if self.config.enableImageFetching:
                 imageExtractor = self.getImageExtractor(article)
                 article.topImage = imageExtractor.getBestImage(article.rawDoc, article.topNode)
