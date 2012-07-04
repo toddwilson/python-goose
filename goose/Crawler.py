@@ -29,7 +29,7 @@ from goose.cleaners import StandardDocumentCleaner
 from goose.outputformatters import StandardOutputFormatter
 from goose.parsers import Parser
 from goose.images.UpgradedImageExtractor import UpgradedImageIExtractor
-from goose.network import HtmlFetcher
+from network import get_html
 
 class CrawlCandidate(object):
     
@@ -99,7 +99,7 @@ class Crawler(object):
             return crawlCandidate.rawHTML
         else:
             # fetch HTML
-            html = HtmlFetcher().getHtml(self.config, parsingCandidate.url)
+            html = get_html(parsingCandidate.url, self.config)
             return html
     
     
