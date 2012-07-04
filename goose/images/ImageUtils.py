@@ -30,7 +30,7 @@ from goose.images.ImageExtractor import LocallyStoredImage
 class ImageUtils(object):
     
     @classmethod
-    def getImageDimensions(self, identifyProgram, filePath):
+    def getImageDimensions(self, filePath):
         image = Image.open(filePath)
         imageDetails = ImageDetails()
         imageDetails.setMimeType(image.format)
@@ -78,8 +78,7 @@ class ImageUtils(object):
     def readExistingFileInfo(self, linkhash, imageSrc, config):
         localImageName = self.getLocalFileName(linkhash, imageSrc, config)
         if os.path.isfile(localImageName):
-            identify = config.imagemagickIdentifyPath
-            imageDetails = self.getImageDimensions(identify, localImageName)
+            imageDetails = self.getImageDimensions(localImageName)
             fileExtension = self.getFileExtensionName(imageDetails)
             bytes = os.path.getsize(localImageName)
             return LocallyStoredImage(
