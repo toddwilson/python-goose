@@ -94,14 +94,18 @@ class WordStats(object):
 class StopWords(object):
     PUNCTUATION = re.compile("[^\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}\\p{Pc}\\s]")
     TRANS_TABLE = string.maketrans('', '')
+    _cached_stop_words = {}
 
     def __init__(self, language='en'):
         # TODO replace 'x' with class
         # to generate dynamic path for file to load
-        path = 'text/stopwords-%s.txt' % language
-        self.STOP_WORDS = set(FileHelper.loadResourceFile(path).splitlines())
-    
-    
+        if not language in self._cached_stop_words:
+            path = 'text/stopwords-%s.txt' % language
+            self.STOP_WORDS = set(FileHelper.loadResourceFile(path).splitlines())
+            self._cached_stop_words[language] = self.STOP_WORDS
+        self.STOP_WORDS = self._cached_stop_words[language]
+
+
     def removePunctuation(self, content):
         # code taken form
         # http://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string-in-python
