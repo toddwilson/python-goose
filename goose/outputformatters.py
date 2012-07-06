@@ -21,6 +21,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 from HTMLParser import HTMLParser
+from goose import cache
 from goose.text import StopWords, innerTrim
 from goose.parsers import Parser
 
@@ -68,7 +69,7 @@ class OutputFormatter(object):
         that have a negative gravity score, 
         let's give em the boot
         """
-        gravityItems = self.topNode.cssselect("*[gravityScore]")
+        gravityItems = cache.cssselect("*[gravityScore]", self.topNode)
         for item in gravityItems:
             score = int(item.attrib.get('gravityScore'),0)
             if score < 1:

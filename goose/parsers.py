@@ -23,6 +23,7 @@ limitations under the License.
 import lxml.html
 from lxml import etree
 from copy import deepcopy
+from goose import cache
 from goose.text import innerTrim
 from goose.text import encodeValue
 
@@ -54,7 +55,7 @@ class Parser(object):
     @classmethod
     def getElementById(self, node, idd):
         selector = '//*[@id="%s"]' % idd
-        elems = node.xpath(selector)
+        elems = cache.xpath(selector, node)
         if elems:
             return elems[0]
         return None
@@ -70,7 +71,7 @@ class Parser(object):
             selector = '%s[re:test(@%s, "%s", "i")]' % (selector, attr, value)
             #selector = '%s[%s="%s"]' % (selector, attr, value)
         #elems = node.cssselect(selector)
-        elems = node.xpath(selector, namespaces={"re": NS})
+        elems = cache.xpath(selector, node, namespaces={"re": NS})
         # remove the root node
         # if we have a selection tag
         if node in elems and (tag or childs):
@@ -117,7 +118,7 @@ class Parser(object):
     @classmethod
     def getElementsByTags(self, node, tags):
         selector = ','.join(tags)
-        elems = node.cssselect(selector)
+        elems = cache.cssselect(selector, node)
         # remove the root node
         # if we have a selection tag
         if node in elems:
@@ -135,9 +136,9 @@ class Parser(object):
     
     @classmethod
     def getComments(self, node):
-        return node.xpath('//comment()')
-    
-    
+        return cache.xpath('//comment()', node)
+
+
     @classmethod
     def getParent(self, node):
         return node.getparent()

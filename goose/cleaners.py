@@ -20,6 +20,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from goose import cache
 from goose.parsers import Parser
 from goose.utils import ReplaceSequence
 
@@ -87,7 +88,7 @@ class DocumentCleaner(object):
     
     
     def removeDropCaps(self, doc):
-        items = doc.cssselect("span[class~=dropcap], span[class~=drop_cap]")
+        items = cache.cssselect("span[class~=dropcap], span[class~=drop_cap]", doc)
         for item in items:
             item.drop_tag()
         
@@ -116,19 +117,19 @@ class DocumentCleaner(object):
     def cleanBadTags(self, doc):
         
         # ids
-        naughtyList = doc.xpath(self.queryNaughtyIDs, 
+        naughtyList = cache.xpath(self.queryNaughtyIDs, doc,
                                         namespaces={'re':self.regexpNS})
         for node in naughtyList:
             Parser.remove(node)
         
         # class
-        naughtyClasses = doc.xpath(self.queryNaughtyClasses, 
+        naughtyClasses = cache.xpath(self.queryNaughtyClasses, doc,
                                         namespaces={'re':self.regexpNS})
         for node in naughtyClasses:
             Parser.remove(node)
         
         # name
-        naughtyNames = doc.xpath(self.queryNaughtyNames,    
+        naughtyNames = cache.xpath(self.queryNaughtyNames, doc,
                                         namespaces={'re':self.regexpNS})
         for node in naughtyNames:
             Parser.remove(node)
@@ -139,7 +140,7 @@ class DocumentCleaner(object):
     def removeNodesViaRegEx(self, doc, pattern):
         for selector in ['id', 'class']:
             reg = "//*[re:test(@%s, '%s', 'i')]" % (selector, pattern)
-            naughtyList = doc.xpath(reg, namespaces={'re':self.regexpNS})
+            naughtyList = cache.xpath(reg, doc, namespaces={'re':self.regexpNS})
             for node in naughtyList:
                 Parser.remove(node)
         return doc
@@ -147,7 +148,7 @@ class DocumentCleaner(object):
     
     
     def cleanUpSpanTagsInParagraphs(self, doc):
-        spans = doc.cssselect('p > span')
+        spans = cache.cssselect('p > span', doc)
         for item in spans:
             item.drop_tag()
         return doc

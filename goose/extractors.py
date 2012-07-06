@@ -23,6 +23,7 @@ limitations under the License.
 import re
 from copy import deepcopy
 from urlparse import urlparse, urljoin
+from goose import cache
 from goose.utils import StringSplitter
 from goose.utils import StringReplacement
 from goose.utils import ReplaceSequence
@@ -149,7 +150,7 @@ class ContentExtractor(object):
         """\
         Extract a given meta content form document
         """
-        meta = doc.cssselect(metaName)
+        meta = cache.cssselect(metaName, doc)
         content = None
         
         if meta is not None and len(meta) > 0:
@@ -205,8 +206,8 @@ class ContentExtractor(object):
         # node doesn't have chidren
         if len(list(node)) == 0:
             return NO_STRINGS
-        
-        elements = node.cssselect(A_REL_TAG_SELECTOR)
+
+        elements = cache.cssselect(A_REL_TAG_SELECTOR, node)
         if elements is None:
             return NO_STRINGS
         
