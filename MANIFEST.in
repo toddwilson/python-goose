@@ -1,1 +1,3 @@
-recursive-include goose/resources/text/*.txt
+recursive-include goose/resources/images *
+recursive-include goose/resources/parser *
+recursive-include goose/resources/text *
