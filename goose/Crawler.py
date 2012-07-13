@@ -47,7 +47,6 @@ class Crawler(object):
         self.logPrefix = "crawler:"
         
     def crawl(self, crawlCandidate):
-        config = crawlCandidate.config
         article = Article()
         
         parseCandidate = URLHelper.getCleanedUrl(crawlCandidate.url)
@@ -79,16 +78,16 @@ class Crawler(object):
         article.tags = extractor.extractTags(article)
 
         # if the user requested a full body response
-        if config.enableBodyAnalysis:
-            article.doc = docCleaner.clean(article)
+        article.doc = docCleaner.clean(article)
 
-            # big stuff
-            article.topNode = extractor.calculateBestNodeBasedOnClustering(article)
-            if article.topNode is not None:
-                if self.config.enableImageFetching:
-                    imageExtractor = self.getImageExtractor(article)
-                    article.topImage = imageExtractor.getBestImage(article.rawDoc, article.topNode)
+        # big stuff
+        article.topNode = extractor.calculateBestNodeBasedOnClustering(article)
+        if article.topNode is not None and any([self.config.enableImageFetching, self.config.enableBodyAnalysis]):
+            if self.config.enableImageFetching:
+                imageExtractor = self.getImageExtractor(article)
+                article.topImage = imageExtractor.getBestImage(article.rawDoc, article.topNode)
 
+            if self.config.enableBodyAnalysis:
                 article.topNode = extractor.postExtractionCleanup(article.topNode)
                 article.cleanedArticleText = outputFormatter.getFormattedText(article.topNode)
 
