@@ -47,7 +47,7 @@ class Crawler(object):
         self.logPrefix = "crawler:"
         
     def crawl(self, crawlCandidate):
-        options = crawlCandidate.options
+        config = crawlCandidate.config
         article = Article()
         
         parseCandidate = URLHelper.getCleanedUrl(crawlCandidate.url)
@@ -67,6 +67,8 @@ class Crawler(object):
         article.finalUrl = parseCandidate.url
         article.linkhash = parseCandidate.linkhash
         article.rawHtml = rawHtml
+        article.doc = doc
+        article.rawDoc = deepcopy(doc)
         article.title = extractor.getTitle(article)
         article.metaLang = extractor.getMetaLang(article)
         article.metaFavicon = extractor.getMetaFavicon(article)
@@ -77,9 +79,7 @@ class Crawler(object):
         article.tags = extractor.extractTags(article)
 
         # if the user requested a full body response
-        if options.enableBodyAnalysis:
-            article.doc = doc
-            article.rawDoc = deepcopy(doc)
+        if config.enableBodyAnalysis:
             article.doc = docCleaner.clean(article)
 
             # big stuff
