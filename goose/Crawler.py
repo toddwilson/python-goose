@@ -47,6 +47,7 @@ class Crawler(object):
         self.logPrefix = "crawler:"
         
     def crawl(self, crawlCandidate):
+        options = crawlCandidate.options
         article = Article()
         
         parseCandidate = URLHelper.getCleanedUrl(crawlCandidate.url)
@@ -66,8 +67,6 @@ class Crawler(object):
         article.finalUrl = parseCandidate.url
         article.linkhash = parseCandidate.linkhash
         article.rawHtml = rawHtml
-        article.doc = doc
-        article.rawDoc = deepcopy(doc)
         article.title = extractor.getTitle(article)
         article.metaLang = extractor.getMetaLang(article)
         article.metaFavicon = extractor.getMetaFavicon(article)
@@ -76,19 +75,23 @@ class Crawler(object):
         article.canonicalLink = extractor.getCanonicalLink(article)
         article.domain = extractor.getDomain(article.finalUrl)
         article.tags = extractor.extractTags(article)
-        # # before we do any calcs on the body itself let's clean up the document
-        article.doc = docCleaner.clean(article)
-        
-        # big stuff
-        article.topNode = extractor.calculateBestNodeBasedOnClustering(article)
-        if article.topNode is not None:
-            if self.config.enableImageFetching:
-                imageExtractor = self.getImageExtractor(article)
-                article.topImage = imageExtractor.getBestImage(article.rawDoc, article.topNode)
-                
-            article.topNode = extractor.postExtractionCleanup(article.topNode)
-            article.cleanedArticleText = outputFormatter.getFormattedText(article.topNode)
-            
+
+        # if the user requested a full body response
+        if options.enableBodyAnalysis:
+            article.doc = doc
+            article.rawDoc = deepcopy(doc)
+            article.doc = docCleaner.clean(article)
+
+            # big stuff
+            article.topNode = extractor.calculateBestNodeBasedOnClustering(article)
+            if article.topNode is not None:
+                if self.config.enableImageFetching:
+                    imageExtractor = self.getImageExtractor(article)
+                    article.topImage = imageExtractor.getBestImage(article.rawDoc, article.topNode)
+
+                article.topNode = extractor.postExtractionCleanup(article.topNode)
+                article.cleanedArticleText = outputFormatter.getFormattedText(article.topNode)
+
         return article
         
     def getHTML(self, crawlCandidate, parsingCandidate):

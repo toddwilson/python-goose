@@ -38,6 +38,9 @@ class Configuration(object):
         # interface to build your own
         self.enableImageFetching = True
 
+        # enable or disable body analysis
+        self.enableBodyAnalysis = True
+
         # used as the user agent that
         # is sent with your web requests to extract an article
         # self.browserUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2)"\
